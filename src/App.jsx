@@ -16,11 +16,23 @@ import './App.css';
   localStorage.setItem('key', value)
  */
 
-function useLocalStorage(key, defaultValue) {}
+function useLocalStorage(key, defaultValue) {
+  const [val, setVal] = React.useState(() => {
+    const storedVal = window.localStorage.getItem(key);
+    return storedVal ? storedVal : defaultValue;
+  });
+
+  function setter(nextVal) {
+    setVal(nextVal);
+    window.localStorage.setItem(key, nextVal);
+  }
+
+  return [val, setter];
+}
 
 function App() {
-  const [count, setCount] = React.useState(0);
-  // const [count, setCount] = useLocalStorage('count', 0);
+  // const [count, setCount] = React.useState(0);
+  const [count, setCount] = useLocalStorage('count', 0);
 
   return (
     <div className="card">
