@@ -19,12 +19,17 @@ import './App.css';
 function useLocalStorage(key, defaultValue) {
   const [val, setVal] = React.useState(() => {
     const storedVal = window.localStorage.getItem(key);
-    return storedVal ? storedVal : defaultValue;
+    return storedVal ? JSON.parse(storedVal) : defaultValue;
   });
 
-  function setter(nextVal) {
+  function setter(nextValOrSetter) {
+    const nextVal =
+      typeof nextValOrSetter === 'function'
+        ? nextValOrSetter()
+        : nextValOrSetter;
+
     setVal(nextVal);
-    window.localStorage.setItem(key, nextVal);
+    window.localStorage.setItem(key, JSON.stringify(nextVal));
   }
 
   return [val, setter];
@@ -32,11 +37,13 @@ function useLocalStorage(key, defaultValue) {
 
 function App() {
   // const [count, setCount] = React.useState(0);
-  const [count, setCount] = useLocalStorage('count', 0);
+  const [obj, setObj] = useLocalStorage('data', { count: 0 });
 
   return (
     <div className="card">
-      <button onClick={() => setCount(count + 1)}>count is {count}</button>
+      <button onClick={() => setObj({ count: obj.count + 1 })}>
+        count is {obj.count}
+      </button>
       <p>
         Edit <code>src/App.jsx</code> and save to see changes
       </p>
