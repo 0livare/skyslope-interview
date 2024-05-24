@@ -16,7 +16,13 @@ import './App.css';
   localStorage.setItem('key', value)
  */
 
-function useLocalStorage(key, defaultValue) {}
+function useLocalStorage(key, defaultValue) {
+  const [state, setState] = useState();
+
+  function setter() {}
+
+  return [state, setter];
+}
 
 function App() {
   const [count, setCount] = React.useState(0);
